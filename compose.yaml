@@ -1,0 +1,12 @@
+services:
+  ansible:
+    build: .
+    working_dir: /ansible
+    volumes:
+      - type: bind
+        source: .
+        target: /ansible
+      - type: bind
+        source: ${USERPROFILE}/.ssh
+        target: /keys
+        read_only: true

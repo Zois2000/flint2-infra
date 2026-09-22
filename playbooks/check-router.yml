@@ -1,0 +1,41 @@
+---
+- name: Check Flint 2
+  hosts: flint2
+  gather_facts: false
+
+  tasks:
+    - name: Read OpenWrt release information
+      ansible.builtin.raw: cat /etc/openwrt_release
+      register: openwrt_release
+      changed_when: false
+
+    - name: Show OpenWrt release information
+      ansible.builtin.debug:
+        var: openwrt_release.stdout_lines
+
+    - name: Read system configuration
+      ansible.builtin.raw: uci show system
+      register: system_config
+      changed_when: false
+
+    - name: Show system configuration
+      ansible.builtin.debug:
+        var: system_config
+
+    - name: Read network configuration
+      ansible.builtin.raw: uci show network
+      register: network_config
+      changed_when: false
+
+    - name: Show network configuration
+      ansible.builtin.debug:
+        var: network_config.stdout_lines
+
+    - name: Read firewall configuration
+      ansible.builtin.raw: uci show firewall
+      register: firewall_config
+      changed_when: false
+
+    - name: Show firewall cofiguration
+      ansible.builtin.debug:
+        var: firewall_config.stdout_lines

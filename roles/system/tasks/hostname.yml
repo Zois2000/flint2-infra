@@ -1,0 +1,12 @@
+---
+- name: Configure hostname
+  ansible.builtin.raw |
+    current="$(uci -q get system.@system[0].hostname)"
+    if [ "$current" != "{{ system_hostname }}" ]; then
+      uci set system.@system[0].hostname='{{ system_hostname }}'
+      uci commit system
+      echo "CHANGED"
+    fi
+  register: hostname_result
+  changed_when: "'CHANGED' in hostname_result.stdout"
+  notify: Restart OpenWrt system service

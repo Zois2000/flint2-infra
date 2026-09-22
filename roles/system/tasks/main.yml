@@ -1,0 +1,10 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for system
+- name: Configure hostname
+  ansible.builtin.import_tasks: hostname.yml
+  when: system_manage_hostname
+
+- name: Configure timezone
+  ansible.builtin.import_tasks: timezone.yml
+  when: system_manage_timezone
