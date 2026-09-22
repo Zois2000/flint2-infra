@@ -1,0 +1,8 @@
+@"
+*.key
+*.pem
+*.tar.gz
+*.backup
+.env
+secrets/
+"@ | Set-Content .gitignore
