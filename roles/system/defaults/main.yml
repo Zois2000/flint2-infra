@@ -1,3 +1,7 @@
-#SPDX-License-Identifier: MIT-0
 ---
-# defaults file for system
+system_manage_hostname: false
+system_hostname: ""
+
+system_manage_timezone: false
+system_zonename: UTC
+system_timezone: UTC
