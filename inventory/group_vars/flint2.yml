@@ -14,3 +14,6 @@ dropbear_root_password_auth: "0"
 
 dropbear_manage_root_login: true
 dropbear_root_login: "1"
+
+packages_install:
+  - nano
