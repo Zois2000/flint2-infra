@@ -1,0 +1,4 @@
+---
+- name: Restart Dropbear
+  ansible.builtin.raw: /etc/init.d/dropbear restart
+  changed_when: true

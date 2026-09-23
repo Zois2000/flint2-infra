@@ -1,0 +1,9 @@
+---
+dropbear_manage_password_auth: false
+dropbear_password_auth: "0"
+
+dropbear_manage_root_password_auth: false
+dropbear_root_password_auth: "0"
+
+dropbear_manage_root_login: false
+dropbear_root_login: "1"
