@@ -6,6 +6,11 @@ network_lan_ipaddr: ""
 network_manage_wan: false
 network_manage_bridges: false
 
+network_manage_iot: false
+network_iot_diabled: "1"
+network_iot_ipaddr: ""
+network_iot_netmask: 255.255.255.0
+
 network_validate_lan: false
 network_expected_lan_ip: ""
 network_expected_lan_proto: static

@@ -1,1 +1,4 @@
-
+---
+- name: Reload IoT interface
+  ansible.builtin.raw: ifup iot
+  changed_when: true

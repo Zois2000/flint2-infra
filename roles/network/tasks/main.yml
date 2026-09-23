@@ -12,3 +12,7 @@
 - name: Configure LAN
   ansible.builtin.import_tasks: lan.yml
   when: network_manage_lan
+
+- name: Configure IoT Network
+  ansible.builtin.import_tasks: iot.yml
+  when: network_manage_iot
