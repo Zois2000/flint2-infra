@@ -1,0 +1,21 @@
+---
+- name: Read LAN IP address
+  ansible.builtin.raw: uci -q get network.lan.ipaddr
+  register: network_lan_ip_result
+  changed_when: false
+  failed_when: false
+
+- name: Read LAN protocol
+  ansible.builtin.raw: uci -q get network.lan.proto
+  register: network_lan_proto_result
+  changed_when: false
+  failed_when: false
+
+- name: Validate LAN management configuration
+  ansible.builtin.assert:
+    that:
+      - network_lan_ip_result.stdout | trim == network_expected_lan_ip
+      - network_lan_proto_result.stdout | trim == network_expected_lan_proto
+    fail_msg: >-
+      LAN configuration differs from the expected management configuration.
+    success_msg: LAN management configuration is valid.

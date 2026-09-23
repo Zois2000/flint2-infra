@@ -1,0 +1,10 @@
+---
+- name: Inspect interfaces
+  ansible.builtin.import_tasks: interfaces.yml
+
+- name: Inspect bridges
+  ansible.builtin.import_tasks: bridges.yml
+
+- name: Validate network configuration
+  ansible.builtin.import_tasks: validate.yml
+  when: network_validate_lan
