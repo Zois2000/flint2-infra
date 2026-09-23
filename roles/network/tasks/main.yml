@@ -8,3 +8,7 @@
 - name: Validate network configuration
   ansible.builtin.import_tasks: validate.yml
   when: network_validate_lan
+
+- name: Configure LAN
+  ansible.builtin.import_tasks: lan.yml
+  when: network_manage_lan

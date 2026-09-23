@@ -1,5 +1,8 @@
 ---
 network_manage_lan: false
+network_lan_proto: static
+network_lan_ipaddr: ""
+
 network_manage_wan: false
 network_manage_bridges: false
 

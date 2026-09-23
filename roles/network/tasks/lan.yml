@@ -1,0 +1,24 @@
+---
+- name: Configure LAN interface
+  ansible.builtin.raw: |
+    changed=0
+
+    current_proto="$(uci -q get network.lan.proto)"
+    current_ipaddr="$(uci -q get network.lan.ipaddr)"
+
+    if [ "$current_proto" != "{{ network_lan_proto }}" ]; then
+      uci set network.lan.proto='{{ network_lan_proto }}'
+      changed=1
+    fi
+
+    if [ "$current_ipaddr" != "{{ network_lan_ipaddr }}" ]; then
+      uci set network.lan.ipaddr='{{ network_lan_ipaddr }}'
+      changed=1
+    fi
+
+    if [ "$changed" = "1" ]; then
+      uci commit network
+      echo "CHANGED"
+    fi
+  register: network_lan_config_result
+  changed_when: "'CHANGED' in network_lan_config_result.stdout"
