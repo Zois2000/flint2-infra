@@ -1,0 +1,4 @@
+---
+backup_local_directory: /ansible/backups
+backup_remote_file: /tmp/flint2-config-backup.tar.gz
+backup_include_package_list: true

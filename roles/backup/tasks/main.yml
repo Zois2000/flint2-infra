@@ -1,0 +1,45 @@
+---
+- name: Generate backup timestamp
+  ansible.builtin.command:
+    argv:
+      - date
+      - +%Y%m%d-%H%M%S
+  delegate_to: localhost
+  register: backup_timestamp_result
+  changed_when: false
+
+- name: Create local backup directory
+  ansible.builtin.file:
+    path: "{{ backup_local_directory }}"
+    state: directory
+    mode: "0700"
+  delegate_to: localhost
+
+- name: Create OpenWrt configuration backup
+  ansible.builtin.raw: >-
+    sysupgrade
+    {{ '-k' if backup_include_package_list else '' }}
+    -b
+    {{ backup_remote_file }}
+  changed_when: true
+
+- name: Verify remote backup
+  ansible.builtin.raw: test -s {{ backup_remote_file }}
+  changed_when: false
+
+- name: Copy backup to controller
+  ansible.builtin.command:
+    argv:
+      - scp
+      - -O
+      - -i
+      - /root/.ssh/flint2_ed25519
+      - -o
+      - StrictHostKeyChecking=yes
+      - >-
+        root@192.168.8.1:{{ backup_remote_file }}
+      - >-
+        {{ backup_local_directory }}/flint2-{{
+        backup_timestamp_result.stdout | trim }}.tar.gz
+  delegate_to: localhost
+  changed_when: true
