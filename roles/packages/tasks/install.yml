@@ -1,0 +1,19 @@
+---
+- name: Install missing OpenWrt packages
+  ansible.builtin.raw: |
+    changed=0
+
+    for package in {{ packages_install | join(' ') }}; do
+      if ! opkg list-installed "$package" | grep -q "^$package "; then
+        opkg update
+        opkg install "$package"
+        changed=1
+      fi
+    done
+
+    if [ "$changed" = "1" ]; then
+      echo "CHANGED"
+    fi
+  register: packages_install_result
+  changed_when: "'CHANGED' in packages_install_result.stdout"
+  when: packages_install | length > 0
