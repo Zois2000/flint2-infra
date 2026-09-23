@@ -25,3 +25,8 @@ network_expected_lan_proto: static
 network_manage_lan: true
 network_lan_proto: static
 network_lan_ipaddr: 192.168.8.1
+
+network_manage_iot: true
+network_iot_disabled: "0"
+network_iot_ipaddr: 192.168.10.1
+network_iot_netmask: 255.255.255.0

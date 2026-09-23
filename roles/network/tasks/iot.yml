@@ -1,0 +1,31 @@
+---
+- name: Configure IoT network
+  ansible.builtin.raw: |
+    changed=0
+
+    current_disabled="$(uci -q get network.iot.disabled)"
+    current_ipaddr="$(uci -q get network.iot.ipaddr)"
+    current_netmask="$(uci -q get network.iot.netmask)"
+
+    if [ "$current_disabled" != "{{ network_iot_disabled }}" ]; then
+      uci set network.iot.disabled='{{ network_iot_disabled }}'
+      changed=1
+    fi
+
+    if [ "$current_ipaddr" != "{{ network_iot_ipaddr }}" ]; then
+      uci set network.iot.ipaddr='{{ network_iot_ipaddr }}'
+      changed=1
+    fi
+
+    if [ "$current_netmask" != "{{ network_iot_netmask }}" ]; then
+      uci set network.iot.netmask='{{ network_iot_netmask }}'
+      changed=1
+    fi
+
+    if [ "$changed" = "1" ]; then
+      uci commit network
+      echo "CHANGED"
+    fi
+  register: network_iot_config_result
+  changed_when: "'CHANGED' in network_iot_config_result.stdout"
+  notify: Reload IoT interface
