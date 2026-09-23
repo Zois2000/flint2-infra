@@ -3,10 +3,15 @@ services:
   ansible:
     build: .
     working_dir: /ansible
+
+    environment:
+      ANSIBLE_CONFIG: /ansible/ansible.cfg
+      ANSIBLE_PAGER: cat
     volumes:
       - type: bind
         source: .
         target: /ansible
+
       - type: bind
         source: ${USERPROFILE}/.ssh
         target: /keys
