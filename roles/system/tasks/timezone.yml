@@ -1,0 +1,16 @@
+---
+- name: Configure timezone
+  ansible.builtin.raw: |
+    current_zonename="$(uci -q get system.@system[0].zonename)"
+    current_timezone="$(uci -q get system.@system[0].timezone)"
+
+    if [ "$current_zonename" != "{{ system_zonename }}" ] || \
+       [ "$current_timezone" != "{{ system_timezone }}" ]; then
+      uci set system.@system[0].zonename='{{ system_zonename }}'
+      uci set system.@system[0].timezone='{{ system_timezone }}'
+      uci commit system
+      echo "CHANGED"
+    fi
+  register: system_timezone_result
+  changed_when: "'CHANGED' in system_timezone_result.stdout"
+  notify: Restart OpenWrt system service

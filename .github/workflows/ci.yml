@@ -25,7 +25,23 @@ jobs:
       - name: Build Ansible container
         run: docker build -t flint2-ansible .
 
-      - name: Check check-router playbook syntax
+      - name: Run yamllint
+        run: |
+          docker run --rm \
+            --entrypoint yamllint \
+            -v "${{ github.workspace }}:/ansible" \
+            flint2-ansible \
+            .
+
+      - name: Run ansible-lint
+        run: |
+          docker run --rm \
+            --entrypoint ansible-lint \
+            -v "${{ github.workspace }}:/ansible" \
+            flint2-ansible \
+            .
+
+      - name: Check playbook syntax
         run: |
           docker run --rm \
             --entrypoint ansible-playbook \
