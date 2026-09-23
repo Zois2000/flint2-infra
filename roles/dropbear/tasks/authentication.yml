@@ -1,0 +1,45 @@
+---
+- name: Configure Dropbear authentication
+  ansible.builtin.raw: |
+    changed=0
+    section="dropbear.@dropbear[0]"
+
+    current_password_auth="$(
+      uci -q get "${section}.PasswordAuth"
+    )"
+
+    current_root_password_auth="$(
+      uci -q get "${section}.RootPasswordAuth"
+    )"
+
+    current_root_login="$(
+      uci -q get "${section}.RootLogin"
+    )"
+
+    if [ "{{ dropbear_manage_password_auth }}" = "True" ] && \
+       [ "$current_password_auth" != "{{ dropbear_password_auth }}" ]; then
+      uci set "${section}.PasswordAuth={{ dropbear_password_auth }}"
+      changed=1
+    fi
+
+    if [ "{{ dropbear_manage_root_password_auth }}" = "True" ] && \
+       [ "$current_root_password_auth" != \
+       "{{ dropbear_root_password_auth }}" ]; then
+      uci set \
+        "${section}.RootPasswordAuth={{ dropbear_root_password_auth }}"
+      changed=1
+    fi
+
+    if [ "{{ dropbear_manage_root_login }}" = "True" ] && \
+       [ "$current_root_login" != "{{ dropbear_root_login }}" ]; then
+      uci set "${section}.RootLogin={{ dropbear_root_login }}"
+      changed=1
+    fi
+
+    if [ "$changed" = "1" ]; then
+      uci commit dropbear
+      echo "CHANGED"
+    fi
+  register: dropbear_authentication_result
+  changed_when: "'CHANGED' in dropbear_authentication_result.stdout"
+  notify: Restart Dropbear
