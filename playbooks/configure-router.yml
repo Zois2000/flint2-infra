@@ -1,0 +1,7 @@
+---
+- name: Configure Flint 2
+  hosts: flint2
+  gather_facts: false
+
+  roles:
+    - system
