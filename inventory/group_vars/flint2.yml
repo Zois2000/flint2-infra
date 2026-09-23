@@ -17,3 +17,7 @@ dropbear_root_login: "1"
 
 packages_install:
   - nano
+
+network_validate_lan: true
+network_expected_lan_ip: 192.168.8.1
+network_expected_lan_proto: static

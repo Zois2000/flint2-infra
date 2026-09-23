@@ -1,0 +1,8 @@
+---
+network_manage_lan: false
+network_manage_wan: false
+network_manage_bridges: false
+
+network_validate_lan: false
+network_expected_lan_ip: ""
+network_expected_lan_proto: static

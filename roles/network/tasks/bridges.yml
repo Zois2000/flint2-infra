@@ -1,0 +1,11 @@
+---
+- name: Read network devices
+  ansible.builtin.raw: |
+    uci show network | grep '=device'
+  register: network_devices_result
+  changed_when: false
+  failed_when: false
+
+- name: Show network devices
+  ansible.builtin.debug:
+    var: network_devices_result.stdout_lines

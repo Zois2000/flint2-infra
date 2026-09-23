@@ -1,0 +1,19 @@
+---
+- name: Read LAN configuration
+  ansible.builtin.raw: uci show network.lan
+  register: network_lan_result
+  changed_when: false
+
+- name: Show LAN configuration
+  ansible.builtin.debug:
+    var: network_lan_result.stdout_lines
+
+- name: Read WAN configuration
+  ansible.builtin.raw: uci show network.wan
+  register: network_wan_result
+  changed_when: false
+  failed_when: false
+
+- name: Show WAN configuration
+  ansible.builtin.debug:
+    var: network_wan_result.stdout_lines
