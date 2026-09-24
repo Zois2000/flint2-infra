@@ -1,0 +1,42 @@
+---
+- name: Configure IoT firewall zone
+  ansible.builtin.raw: |
+    changed=0
+
+    zone="$(
+      uci show firewall |
+      sed -n "s/^\(firewall\.[^.]*\)\.name='iot'$/\1/p" |
+      head -n 1
+    )"
+
+    if [ -z "$zone" ]; then
+      echo "ERROR: IoT firewall zone not found"
+      exit 1
+    fi
+
+    current_input="$(uci -q get "${zone}.input")"
+    current_output="$(uci -q get "${zone}.output")"
+    current_forward="$(uci -q get "${zone}.forward")"
+
+    if [ "$current_input" != "{{ firewall_iot_input }}" ]; then
+      uci set "${zone}.input={{ firewall_iot_input }}"
+      changed=1
+    fi
+
+    if [ "$current_output" != "{{ firewall_iot_output }}" ]; then
+      uci set "${zone}.output={{ firewall_iot_output }}"
+      changed=1
+    fi
+
+    if [ "$current_forward" != "{{ firewall_iot_forward }}" ]; then
+      uci set "${zone}.forward={{ firewall_iot_forward }}"
+      changed=1
+    fi
+
+    if [ "$changed" = "1" ]; then
+      uci commit firewall
+      echo "CHANGED"
+    fi
+  register: firewall_iot_zone_result
+  changed_when: "'CHANGED' in firewall_iot_zone_result.stdout"
+  notify: Reload firewall

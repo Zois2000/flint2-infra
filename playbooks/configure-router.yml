@@ -10,3 +10,4 @@
     - network
     - wireless
     - dhcp_dns
+    - firewall

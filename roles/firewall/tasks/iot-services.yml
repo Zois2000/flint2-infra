@@ -1,0 +1,52 @@
+---
+- name: Validate IoT DHCP firewall rule
+  ansible.builtin.raw: |
+    rule="$(
+      uci show firewall |
+      sed -n \
+        "s/^\(firewall\.[^.]*\)\.name='Allow-DHCP'$/\1/p" |
+      while read -r section; do
+        src="$(uci -q get "${section}.src")"
+
+        if [ "$src" = "iot" ]; then
+          echo "$section"
+          break
+        fi
+      done
+    )"
+
+    if [ -z "$rule" ]; then
+      echo "ERROR: IoT DHCP rule not found"
+      exit 1
+    fi
+
+    test "$(uci -q get "${rule}.target")" = "ACCEPT"
+    test "$(uci -q get "${rule}.proto")" = "udp"
+    test "$(uci -q get "${rule}.dest_port")" = "67-68"
+  changed_when: false
+
+- name: Validate IoT DNS firewall rule
+  ansible.builtin.raw: |
+    rule="$(
+      uci show firewall |
+      sed -n \
+        "s/^\(firewall\.[^.]*\)\.name='Allow-DNS'$/\1/p" |
+      while read -r section; do
+        src="$(uci -q get "${section}.src")"
+
+        if [ "$src" = "iot" ]; then
+          echo "$section"
+          break
+        fi
+      done
+    )"
+
+    if [ -z "$rule" ]; then
+      echo "ERROR: IoT DNS rule not found"
+      exit 1
+    fi
+
+    test "$(uci -q get "${rule}.target")" = "ACCEPT"
+    test "$(uci -q get "${rule}.proto")" = "tcp udp"
+    test "$(uci -q get "${rule}.dest_port")" = "53"
+  changed_when: false

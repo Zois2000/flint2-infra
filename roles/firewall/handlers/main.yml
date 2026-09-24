@@ -1,0 +1,4 @@
+---
+- name: Reload firewall
+  ansible.builtin.raw: /etc/init.d/firewall reload
+  changed_when: true

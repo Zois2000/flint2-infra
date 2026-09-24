@@ -54,3 +54,11 @@ dhcp_dns_manage_iot: true
 dhcp_dns_iot_start: "100"
 dhcp_dns_iot_limit: "150"
 dhcp_dns_iot_leasetime: "12h"
+
+firewall_manage_iot: true
+
+firewall_iot_input: REJECT
+firewall_iot_output: ACCEPT
+firewall_iot_forward: REJECT
+
+firewall_iot_wan_forwarding: true
