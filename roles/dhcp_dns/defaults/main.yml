@@ -1,0 +1,6 @@
+---
+dhcp_dns_manage_iot: false
+
+dhcp_dns_iot_start: "100"
+dhcp_dns_iot_limit: "150"
+dhcp_dns_iot_leasetime: "12h"

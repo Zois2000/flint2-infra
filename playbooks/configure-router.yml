@@ -9,3 +9,4 @@
     - packages
     - network
     - wireless
+    - dhcp_dns
