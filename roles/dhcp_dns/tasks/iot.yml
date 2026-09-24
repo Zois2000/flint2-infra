@@ -1,0 +1,31 @@
+---
+- name: Configure IoT DHCP
+  ansible.builtin.raw: |
+    changed=0
+
+    current_start="$(uci -q get dhcp.iot.start)"
+    current_limit="$(uci -q get dhcp.iot.limit)"
+    current_leasetime="$(uci -q get dhcp.iot.leasetime)"
+
+    if [ "$current_start" != "{{ dhcp_dns_iot_start }}" ]; then
+      uci set dhcp.iot.start='{{ dhcp_dns_iot_start }}'
+      changed=1
+    fi
+
+    if [ "$current_limit" != "{{ dhcp_dns_iot_limit }}" ]; then
+      uci set dhcp.iot.limit='{{ dhcp_dns_iot_limit }}'
+      changed=1
+    fi
+
+    if [ "$current_leasetime" != "{{ dhcp_dns_iot_leasetime }}" ]; then
+      uci set dhcp.iot.leasetime='{{ dhcp_dns_iot_leasetime }}'
+      changed=1
+    fi
+
+    if [ "$changed" = "1" ]; then
+      uci commit dhcp
+      echo "CHANGED"
+    fi
+  register: dhcp_dns_iot_result
+  changed_when: "'CHANGED' in dhcp_dns_iot_result.stdout"
+  notify: Restart dnsmasq

@@ -1,0 +1,4 @@
+---
+- name: Configure IoT DHCP
+  ansible.builtin.import_tasks: iot.yml
+  when: dhcp_dns_manage_iot
