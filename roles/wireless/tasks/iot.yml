@@ -1,0 +1,60 @@
+---
+- name: Configure IoT wireless networks
+  ansible.builtin.raw: |
+    changed=0
+
+    configure_wifi() {
+      section="$1"
+      enabled="$2"
+      desired_ssid="$3"
+
+      current_disabled="$(uci -q get wireless.${section}.disabled)"
+      current_ssid="$(uci -q get wireless.${section}.ssid)"
+      current_encryption="$(uci -q get wireless.${section}.encryption)"
+      current_key="$(uci -q get wireless.${section}.key)"
+
+      if [ "$enabled" = "True" ]; then
+        desired_disabled="0"
+      else
+        desired_disabled="1"
+      fi
+
+      if [ "$current_disabled" != "$desired_disabled" ]; then
+        uci set wireless.${section}.disabled="$desired_disabled"
+        changed=1
+      fi
+
+      if [ "$current_ssid" != "$desired_ssid" ]; then
+        uci set wireless.${section}.ssid="$desired_ssid"
+        changed=1
+      fi
+
+      if [ "$current_encryption" != "{{ wireless_iot_encryption }}" ]; then
+        uci set wireless.${section}.encryption='{{ wireless_iot_encryption }}'
+        changed=1
+      fi
+
+      if [ "$current_key" != "{{ wireless_iot_key }}" ]; then
+        uci set wireless.${section}.key='{{ wireless_iot_key }}'
+        changed=1
+      fi
+    }
+
+    configure_wifi \
+      "iot2g" \
+      "{{ wireless_iot_2g_enabled }}" \
+      "{{ wireless_iot_2g_ssid }}"
+
+    configure_wifi \
+      "iot5g" \
+      "{{ wireless_iot_5g_enabled }}" \
+      "{{ wireless_iot_5g_ssid }}"
+
+    if [ "$changed" = "1" ]; then
+      uci commit wireless
+      echo "CHANGED"
+    fi
+  register: wireless_iot_result
+  changed_when: "'CHANGED' in wireless_iot_result.stdout"
+  no_log: true
+  notify: Reload wireless

@@ -7,6 +7,8 @@ services:
     environment:
       ANSIBLE_CONFIG: /ansible/ansible.cfg
       ANSIBLE_PAGER: cat
+      ANSIBLE_VAULT_PASSWORD_FILE: /root/.config/ansible/vault-password
+
     volumes:
       - type: bind
         source: .
@@ -15,4 +17,9 @@ services:
       - type: bind
         source: ${USERPROFILE}/.ssh
         target: /keys
+        read_only: true
+
+      - type: bind
+        source: ${USERPROFILE}/.config/flint2-infra
+        target: /secrets
         read_only: true

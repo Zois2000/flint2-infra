@@ -1,0 +1,4 @@
+---
+- name: Configure IoT wireless
+  ansible.builtin.import_tasks: iot.yml
+  when: wireless_manage_iot
