@@ -1,0 +1,12 @@
+---
+- name: Configure IoT firewall
+  ansible.builtin.import_tasks: iot.yml
+  when: firewall_manage_iot
+
+- name: Configure IoT forwarding
+  ansible.builtin.import_tasks: iot-forwarding.yml
+  when: firewall_manage_iot
+
+- name: Configure IoT services
+  ansible.builtin.import_tasks: iot-services.yml
+  when: firewall_manage_iot

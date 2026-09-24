@@ -1,0 +1,47 @@
+---
+- name: Configure IoT to WAN forwarding
+  ansible.builtin.raw: |
+    changed=0
+
+    forwarding="$(
+      uci show firewall |
+      sed -n \
+        "s/^\(firewall\.[^.]*\)\.src='iot'$/\1/p" |
+      while read -r section; do
+        dest="$(uci -q get "${section}.dest")"
+
+        if [ "$dest" = "wan" ]; then
+          echo "$section"
+          break
+        fi
+      done
+    )"
+
+    if [ -z "$forwarding" ]; then
+      echo "ERROR: IoT to WAN forwarding not found"
+      exit 1
+    fi
+
+    current_enabled="$(
+      uci -q get "${forwarding}.enabled"
+    )"
+
+    if [ "{{ firewall_iot_wan_forwarding }}" = "True" ]; then
+      desired_enabled="1"
+    else
+      desired_enabled="0"
+    fi
+
+    if [ "${current_enabled:-1}" != "$desired_enabled" ]; then
+      uci set "${forwarding}.enabled=${desired_enabled}"
+      changed=1
+    fi
+
+    if [ "$changed" = "1" ]; then
+      uci commit firewall
+      echo "CHANGED"
+    fi
+  register: firewall_iot_forwarding_result
+  changed_when: >-
+    'CHANGED' in firewall_iot_forwarding_result.stdout
+  notify: Reload firewall

@@ -1,0 +1,8 @@
+---
+firewall_manage_iot: false
+
+firewall_iot_input: REJECT
+firewall_iot_output: ACCEPT
+firewall_iot_forward: REJECT
+
+firewall_iot_wan_forwarding: true
