@@ -1,0 +1,11 @@
+---
+wireless_manage_iot: false
+
+wireless_iot_2g_enabled: false
+wireless_iot_5g_enabled: false
+
+wireless_iot_2g_ssid: ""
+wireless_iot_5g_ssid: ""
+
+wireless_iot_encryption: psk2
+wireless_iot_key: ""
