@@ -55,6 +55,12 @@ dhcp_dns_iot_start: "100"
 dhcp_dns_iot_limit: "150"
 dhcp_dns_iot_leasetime: "12h"
 
+dhcp_dns_static_hosts:
+  - id: pi_server
+    name: dpd_project-server
+    mac: b8:27:eb:d7:d8:fe
+    ip: 192.168.8.10
+
 firewall_manage_iot: true
 
 firewall_iot_input: REJECT
