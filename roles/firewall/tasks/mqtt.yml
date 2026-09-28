@@ -1,0 +1,62 @@
+---
+- name: Configure IoT MQTT firewall rule
+  ansible.builtin.raw: |
+    changed=0
+    section="firewall.iot_mqtt"
+
+    current_type="$(uci -q get "${section}")"
+    current_name="$(uci -q get "${section}.name")"
+    current_src="$(uci -q get "${section}.src")"
+    current_dest="$(uci -q get "${section}.dest")"
+    current_dest_ip="$(uci -q get "${section}.dest_ip")"
+    current_dest_port="$(uci -q get "${section}.dest_port")"
+    current_proto="$(uci -q get "${section}.proto")"
+    current_target="$(uci -q get "${section}.target")"
+
+    if [ "$current_type" != "rule" ]; then
+      uci set "${section}=rule"
+      changed=1
+    fi
+
+    if [ "$current_name" != "Allow-IoT-MQTT" ]; then
+      uci set "${section}.name=Allow-IoT-MQTT"
+      changed=1
+    fi
+
+    if [ "$current_src" != "{{ firewall_mqtt_source_zone }}" ]; then
+      uci set "${section}.src={{ firewall_mqtt_source_zone }}"
+      changed=1
+    fi
+
+    if [ "$current_dest" != "{{ firewall_mqtt_destination_zone }}" ]; then
+      uci set "${section}.dest={{ firewall_mqtt_destination_zone }}"
+      changed=1
+    fi
+
+    if [ "$current_dest_ip" != "{{ firewall_mqtt_destination_ip }}" ]; then
+      uci set "${section}.dest_ip={{ firewall_mqtt_destination_ip }}"
+      changed=1
+    fi
+
+    if [ "$current_dest_port" != "{{ firewall_mqtt_port }}" ]; then
+      uci set "${section}.dest_port={{ firewall_mqtt_port }}"
+      changed=1
+    fi
+
+    if [ "$current_proto" != "{{ firewall_mqtt_protocol }}" ]; then
+      uci set "${section}.proto={{ firewall_mqtt_protocol }}"
+      changed=1
+    fi
+
+    if [ "$current_target" != "ACCEPT" ]; then
+      uci set "${section}.target=ACCEPT"
+      changed=1
+    fi
+
+    if [ "$changed" = "1" ]; then
+      uci commit firewall
+      echo "CHANGED"
+    fi
+  register: firewall_mqtt_result
+  changed_when: "'CHANGED' in firewall_mqtt_result.stdout"
+  notify: Reload firewall
