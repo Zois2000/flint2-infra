@@ -2,3 +2,7 @@
 - name: Configure IoT DHCP
   ansible.builtin.import_tasks: iot.yml
   when: dhcp_dns_manage_iot
+
+- name: Configure static DHCP hosts
+  ansible.builtin.import_tasks: static-hosts.yml
+  when: dhcp_dns_static_hosts | length > 0

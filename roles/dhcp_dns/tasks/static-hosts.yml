@@ -1,0 +1,39 @@
+---
+- name: Configure static DHCP hosts
+  ansible.builtin.raw: |
+    changed=0
+    section="dhcp.{{ item.id }}"
+
+    current_type="$(uci -q get "${section}")"
+    current_name="$(uci -q get "${section}.name")"
+    current_mac="$(uci -q get "${section}.mac")"
+    current_ip="$(uci -q get "${section}.ip")"
+
+    if [ "$current_type" != "host" ]; then
+      uci set "${section}=host"
+      changed=1
+    fi
+
+    if [ "$current_name" != "{{ item.name }}" ]; then
+      uci set "${section}.name={{ item.name }}"
+      changed=1
+    fi
+
+    if [ "$current_mac" != "{{ item.mac }}" ]; then
+      uci set "${section}.mac={{ item.mac }}"
+      changed=1
+    fi
+
+    if [ "$current_ip" != "{{ item.ip }}" ]; then
+      uci set "${section}.ip={{ item.ip }}"
+      changed=1
+    fi
+
+    if [ "$changed" = "1" ]; then
+      uci commit dhcp
+      echo "CHANGED"
+    fi
+  loop: "{{ dhcp_dns_static_hosts }}"
+  register: dhcp_dns_static_host_result
+  changed_when: "'CHANGED' in dhcp_dns_static_host_result.stdout"
+  notify: Restart dnsmasq
