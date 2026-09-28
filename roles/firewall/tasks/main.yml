@@ -10,3 +10,7 @@
 - name: Configure IoT services
   ansible.builtin.import_tasks: iot-services.yml
   when: firewall_manage_iot
+
+- name: Configure MQTT firewall access
+  ansible.builtin.import_tasks: mqtt.yml
+  when: firewall_manage_mqtt

@@ -6,6 +6,7 @@ system_manage_timezone: true
 system_zonename: Europe/Berlin
 system_timezone: CET-1CEST,M3.5.0.M10.5.0/3
 
+
 dropbear_manage_password_auth: true
 dropbear_password_auth: "0"
 
@@ -17,6 +18,7 @@ dropbear_root_login: "1"
 
 packages_install:
   - nano
+
 
 network_validate_lan: true
 network_expected_lan_ip: 192.168.8.1
@@ -30,6 +32,7 @@ network_manage_iot: true
 network_iot_disabled: "0"
 network_iot_ipaddr: 192.168.10.1
 network_iot_netmask: 255.255.255.0
+
 
 wireless_manage_iot: true
 
@@ -49,6 +52,7 @@ wireless_iot_key: !vault |
           3266616161316330640a306531633931636433313933373839306166366532313166373835646430
           65623731313961376633373738393662666635666536303265376463626133373735
 
+
 dhcp_dns_manage_iot: true
 
 dhcp_dns_iot_start: "100"
@@ -57,9 +61,10 @@ dhcp_dns_iot_leasetime: "12h"
 
 dhcp_dns_static_hosts:
   - id: pi_server
-    name: dpd_project-server
+    name: dpd-project-server
     mac: b8:27:eb:d7:d8:fe
     ip: 192.168.8.10
+
 
 firewall_manage_iot: true
 
@@ -68,3 +73,12 @@ firewall_iot_output: ACCEPT
 firewall_iot_forward: REJECT
 
 firewall_iot_wan_forwarding: true
+
+
+firewall_manage_mqtt: true
+
+firewall_mqtt_source_zone: iot
+firewall_mqtt_destination_zone: lan
+firewall_mqtt_destination_ip: "192.168.8.10"
+firewall_mqtt_port: "1884"
+firewall_mqtt_protocol: tcp
