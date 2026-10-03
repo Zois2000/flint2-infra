@@ -14,3 +14,11 @@
 - name: Configure MQTT firewall access
   ansible.builtin.import_tasks: mqtt.yml
   when: firewall_manage_mqtt
+
+- name: Remove legacy MQTT firewall access
+  ansible.builtin.import_tasks: mqtt-remove.yml
+  when: not firewall_manage_mqtt
+
+- name: Configure MQTT TLS firewall access
+  ansible.builtin.import_tasks: mqtt_tls.yml
+  when: firewall_manage_mqtt_tls

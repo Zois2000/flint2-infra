@@ -14,4 +14,7 @@ firewall_mqtt_source_zone: iot
 firewall_mqtt_destination_zone: lan
 firewall_mqtt_destination_ip: ""
 firewall_mqtt_port: "1883"
-firewall_mqtt_protocoll: tcp
+firewall_mqtt_protocol: tcp
+
+firewall_manage_mqtt_tls: false
+firewall_mqtt_tls_port: "8883"
