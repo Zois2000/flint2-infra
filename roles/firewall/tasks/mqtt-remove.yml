@@ -1,0 +1,13 @@
+---
+- name: Remove legacy IoT MQTT firewall rule
+  ansible.builtin.raw: |
+    section="firewall.iot_mqtt"
+
+    if uci -q get "${section}" >/dev/null 2>&1; then
+      uci delete "${section}"
+      uci commit firewall
+      echo "CHANGED"
+    fi
+  register: firewall_mqtt_remove_result
+  changed_when: "'CHANGED' in firewall_mqtt_remove_result.stdout"
+  notify: Reload firewall

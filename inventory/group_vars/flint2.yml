@@ -75,10 +75,14 @@ firewall_iot_forward: REJECT
 firewall_iot_wan_forwarding: true
 
 
-firewall_manage_mqtt: true
+firewall_manage_mqtt: false
+firewall_manage_mqtt_tls: true
 
 firewall_mqtt_source_zone: iot
 firewall_mqtt_destination_zone: lan
 firewall_mqtt_destination_ip: "192.168.8.10"
+
 firewall_mqtt_port: "1884"
+firewall_mqtt_tls_port: "8883"
+
 firewall_mqtt_protocol: tcp
